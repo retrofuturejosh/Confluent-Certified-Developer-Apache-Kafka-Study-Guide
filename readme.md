@@ -1,87 +1,19 @@
 # Confluent Certified Developer for Apache Kafka - Study Guide
 
 ## Table of Contents
-- [Kafka Core Concepts](#Kafka-Core-Concepts)
-  - [Events](#events)
-  - [Topics](#topics)
-  - [Partitioning](#Partitioning)
-  - [Brokering](#Brokering)
-  - [Replication](#Replication)
-  - [Producers](#Producers)
-  - [Consumers](#consumers)
+- [Kafka Core Concepts](CoreConcepts.md)
 - [Kafka Ecosystem](#Kafka-Ecosystem)
   - [Schema Registry](#Schema-Registry)
   - [Kafka Streams](#Kafka-Streams)
   - [ksqlDB](#ksqlDB)
   - [Kafka APIs](#Kafka-APIs)
-- [Using Kafka](#Using-Kafka)
+- [Get Kafka Running](#get-kafka-running)
   - [Zookeeper](#zookeeper)
   - [Kafka Broker](#kafka-broker)
   - [Hardware Selection](#hardware-selection)
   - [In the Cloud](#in-the-cloud)
   - [Kafka Clusters](#kafka-clusters)
-
-## Kafka Core Concepts
-
-#### Events
-- key and structured value
-- immutable
-- represents something that happened
-- think of programming in terms of events > things
-
-#### Topics
-- ordered log of events
-- new events appended to end of topic
-- by default, messages aren't deleted until configured amount of time (even if read)
-- logs (not queues), meaning they are durable, replicated, fault-tolerant records
-
-#### Partitioning
-- systematic way of breaking the one topic log file into many logs
-- allows topics to be stored on separate servers
-- messages with no key are sent round robin to all partitions
-- messages with keys are hashed and sent to corresponding partition
-  -  messages with the same key will be in the same partition in chronological order
-  - e.g. if userId is key, all events for that userId will be in order in the same partition
-
-#### Brokering
-- computer, instance, or container running the kafka process
-- manage partitions
-- handle read/write requests
-- manage replication of partitions
-- purposefully simple
-- don’t do any computation over messages or routing of messages between topics
-
-#### Replication
-- copies of data for fault tolerance
-- one lead partition and N-1 followers (N is replication factor)
-- writes/reads happen to the leader
-- invisible process (for developers)
-- tunable in producer
-
-#### Producers
-- external application that writes messages to a Kafka cluster
-- communicateswith the cluster using Kafka’s network protocol
-- existing libraries for major languages
-  -  under the hood do the following:
-    - put messages in topics
-    - connection pooling
-    - network buffering
-    - partitioning
-
-#### Consumers
-- external application that reads messages from Kafka topics and does some work with them
-- existing libraries for major languages
-  - does the following
-  - reads messages from topics
-  - connection pooling
-  - network protocol
-  - horizontally and elastically scalable
-  - maintains ordering within partitions at scale
-- more complicated than producer applications
-- reading does NOT delete a message
-- single instance of consumer will receive ALL messages from each partition in order (only in order per partition, NOT across partitions)
-- consumer groups (multiple instances of consumer application) will automatically reshuffle and balance reads (default behavior)
-- maintains ordering-by-key guarantee across n number of consumers
+  - [Production Concerns](#production-concerns)
 
 ## Kafka Ecosystem
 General notes
@@ -153,7 +85,7 @@ General notes
 - Kafka Connect API
   - data import/export connectors that read/write streams of events from/to external systems
 
-## Using Kafka
+## Get Kafka Running
 
 ### Zookeeper
 - stores metadata about the Kafka cluster, as well as
@@ -266,11 +198,46 @@ throughput to the disk will be less because it is on elastic block storage
 expensive
 
 ### Kafka Clusters
-- single server works for dev work or POC
-- multiple brokers provides significant benefits for prod
+
+single server works for dev work or POC
+
+multiple brokers provides significant benefits for prod
   - biggest benefit is scaling across multiple servers
   - replication protects against data loss from system failures
   - allows for performing maintenance
-- How many brokers?
+
+How many brokers?
   - how much disk capacity is required and how much storage is available on a single broker
   - capacity for handling requests
+
+Broker Configuration
+  - requirements for multiple brokers:
+    1. all brokers must have the same configuration for zookeeper.connect
+    2. each must have unique broker.id
+
+OS Tuning
+  - configured in /etc/systcl.conf: set vm.swappiness to a very low value (such as 1). it is better to reduze the size of page cache rather than swap
+
+Disk
+  - In file system, set the noatime mount option, atime increases disk writes and is not needed by kafka
+
+Networking
+  - tune networking stack for high amount of network traffic
+
+### Production Concerns
+
+Garbage Collection
+  - MaxGCPauseMillis - default is 200 ms, can be set to 20 ms
+  - InitiatingHeapOccupancyPercent - default is 45, can be set to 35
+  - these are declared as environment variables when using the start command for kafka
+
+
+Datacenter Layout
+  - best practice is to have each Kafka broker in a cluster installed in a different rack
+  - no shared points of failure for infra
+
+
+Colocating Apps on Zookeeper
+  - single Zookeeper ensemble can support multiple Kafka clusters (using chroot path)
+  - recommended for consumers to use Kafka for committing offsets rather than zookeeper
+  - do not share zookeeper with other applications
