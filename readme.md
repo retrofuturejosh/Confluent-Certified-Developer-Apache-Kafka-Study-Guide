@@ -4,3 +4,4 @@
 - [Kafka Core Concepts](CoreConcepts.md)
 - [Kafka Ecosystem](KafkaEcosystem.md)
 - [Get Kafka Running](GetKafkaRunning.md)
+- [Kafka Producers](KafkaProducers.md)
