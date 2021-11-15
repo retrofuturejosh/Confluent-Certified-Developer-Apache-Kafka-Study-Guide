@@ -5,6 +5,7 @@
   - [Sending a Message](#sending-a-message)
   - [Configuring Producers](#configuring-producers)
   - [Serializers](#serializers)
+  - [Partitions](#partitions)
 
 ## Kafka Producers
 
@@ -136,6 +137,3 @@ Schema Registry - not part of Apache Kafka but there are several open source opt
     - handled in serializer/deserializer
 use `schema.registry.url` in properties when creating Producer
 can also provide a custom schema with `GenericData.Record(schema)`
-
-## Partitions
-

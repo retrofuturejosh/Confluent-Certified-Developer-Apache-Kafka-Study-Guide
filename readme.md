@@ -5,3 +5,6 @@
 - [Kafka Ecosystem](KafkaEcosystem.md)
 - [Get Kafka Running](GetKafkaRunning.md)
 - [Kafka Producers](KafkaProducers.md)
+- [Kafka Internals](KafkaInternals.md)
+- [Reliable Data Delivery](#ReliableDelivery.md)
+- [Kafka Connect](KafkaConnect.md)
