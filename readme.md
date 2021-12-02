@@ -6,5 +6,6 @@
 - [Get Kafka Running](GetKafkaRunning.md)
 - [Kafka Producers](KafkaProducers.md)
 - [Kafka Internals](KafkaInternals.md)
-- [Reliable Data Delivery](#ReliableDelivery.md)
+- [Reliable Data Delivery](ReliableDelivery.md)
 - [Kafka Connect](KafkaConnect.md)
+- [Stream Processing](StreamProcessing.md)
