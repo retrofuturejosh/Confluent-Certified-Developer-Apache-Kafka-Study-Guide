@@ -139,7 +139,7 @@ Topology always starts with one or more source processors and finishes with one 
 
 Kafka Streams automatically balances work between multiple threads or instances.
 
-Streams engine splits topology into tasks. Each task is responsible for a subset of the partitions. The task subscribes to those partitions and consumes events. Task applies all the processing and writes to sink.
+Streams engine splits topology into tasks. Each task is responsible for a subset of the partitions. The task s to those partitions and consumes events. Task applies all the processing and writes to sink.
 
 You can have as many tasks as you have partitions in the topics you are processing.
 
