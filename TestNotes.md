@@ -21,7 +21,7 @@ Notes from Practice Tests
 - subscribe() and assign() cannot be called by the same consumer, subscribe() is used to leverage the consumer group mechanism, while assign() is used to manually control partition assignment and reads assignment
 
 
-- KafkaConsumer is not thread-safe, KafkaProducer is thread safe
+- KafkaConsumer is NOT thread-safe, KafkaProducer IS thread safe
 
 - stateless operators:
   - branch
@@ -49,3 +49,9 @@ Notes from Practice Tests
   - Sliding: Fixed-size, overlapping windows that work on differences between record timestamps
   - Session: Dynamically-sized, non-overlapping, data-driven windows
 
+
+- review avro schema changes
+
+- JDBC connector allows one task per table
+
+-

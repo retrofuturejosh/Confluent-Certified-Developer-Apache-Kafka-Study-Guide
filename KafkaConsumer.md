@@ -39,12 +39,12 @@ Create an instance of `KafkaConsumer` and pass `Properties`. Required properties
 
 use subscribe method
 ```
-consumer.(Collections.singletonList("customerCountries"));
+consumer.subscribe(Collections.singletonList("customerCountries"));
 ```
 
 You can also pass a regular expression to match any new topics and begin consuming those
 ```
-consumer.("test.*");
+consumer.subscribe("test.*");
 ```
 
 ## The Poll Loop
@@ -75,7 +75,7 @@ threading: must have a single thread per consumer
 
 `partition.assignment.strategy` - 2 provided strategies
     1. Range - DEFAULT. assigns each consumer a consecutive subset of partitions from each topic individually. Can create an unbalanced distribution
-    2. Round Robin - takes all partitions from all topics and s sequentially, one by one. Creates a more equal distribution of partitions
+    2. Round Robin - takes all partitions from all topics and subscribes sequentially, one by one. Creates a more equal distribution of partitions
     3. Implement your own assignment class
 
 `max.poll.records` - controls max number of records a single poll() call will return
@@ -112,7 +112,7 @@ call commitSync() or commitAsync() with a map of partitions and offsets to commi
 
 ### Rebalance Listeners
 
-run code when partitions are added or removed from consumer by passing `ConsumerRebalanceListener` when calling `()` method. There are two methods to implement:
+run code when partitions are added or removed from consumer by passing `ConsumerRebalanceListener` when calling `subscribe()` method. There are two methods to implement:
 1. `onPartitionsRevoked` - called before rebalancing starts and after consumer stopped consuming messages. You can commit offsets so next consumer will know exactly where to start
 2. `onPartitionsAssigned` - callsed after partitions have been assigned, before consuming messages
 
@@ -130,4 +130,4 @@ Using AvroSerializer and Schema repository is best option to make sure serialize
 
 ## Standalone Consumer
 
-Instead of subscribing to a topic, assign all partitions to consumer using `consumer.partitionsFor("topic")` method to get all partitions and `consumer.assign(partitions)` method to assign partitions
+Instead of subscribing to a topic, assign all partitions to consumer using `consumer.partitionsFor("topic")` method to get all partitions and `consumer.assign(partitions)` method to assign
